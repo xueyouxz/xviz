@@ -45,7 +45,7 @@ class XVIZVariableBuilder(XVIZBaseBuilder):
         else:
             stream_entry = self._data[self._stream_id]
 
-        if self._id:
+        if self._id is not None:
             for entry in stream_entry.variables:
                 if entry.base.object_id == self._id:
                     # TODO validate error, which should throw
@@ -65,11 +65,11 @@ class XVIZVariableBuilder(XVIZBaseBuilder):
         else:
             self._logger.error("The type of input value is not recognized!")
 
-        if self._id:
+        if self._id is not None:
             var_entry.base.object_id = self._id
 
     def _data_pending(self):
-        return self._values or self._id
+        return self._values is not None or self._id is not None
 
     def _validate(self):
         if self._data_pending():

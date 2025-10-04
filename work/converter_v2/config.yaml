@@ -1,0 +1,7 @@
+version: 'v1.0-mini'
+scenes: 'mini_val' # mini_val\mini_train\train\val
+data_root: "D:/BaiduNetdiskDownload/nuscenes-mini/nuscenes"
+sample_limit: 40
+output_dir: "./xviz_output"
+image_max_width: 400
+image_max_height: 300

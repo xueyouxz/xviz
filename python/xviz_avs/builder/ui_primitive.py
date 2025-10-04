@@ -61,7 +61,7 @@ class XVIZUIPrimitiveBuilder(XVIZBaseBuilder):
         if self._type:
             self._flush()
 
-        if self._primitives:
+        if self._primitives is not None and len(self._primitives) > 0:
             return self._primitives
 
         return None

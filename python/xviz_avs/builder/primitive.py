@@ -205,7 +205,7 @@ class XVIZPrimitiveBuilder(XVIZBaseBuilder):
             obj = Polyline(vertices=self._vertices)
         elif self._type == PRIMITIVE_TYPES.POINT:
             obj = Point(points=self._vertices)
-            if self._colors:
+            if self._colors is not None:
                 obj.colors = bytes(self._colors)
         elif self._type == PRIMITIVE_TYPES.TEXT:
             obj = Text(position=self._vertices[0], text=self._text)
@@ -214,7 +214,7 @@ class XVIZPrimitiveBuilder(XVIZBaseBuilder):
         elif self._type == PRIMITIVE_TYPES.STADIUM:
             obj = Stadium(start=self._vertices[0], end=self._vertices[1], radius=self._radius)
         elif self._type == PRIMITIVE_TYPES.IMAGE:
-            if self._vertices:
+            if self._vertices is not None:
                 self._image.position = self._vertices[0]
             obj = self._image
 
@@ -222,13 +222,13 @@ class XVIZPrimitiveBuilder(XVIZBaseBuilder):
         have_base = False
         base = PrimitiveBase()
 
-        if self._id:
+        if self._id is not None:
             have_base = True
             base.object_id = self._id
-        if self._style:
+        if self._style is not None:
             have_base = True
             base.style.MergeFrom(build_object_style(self._style))
-        if self._classes:
+        if self._classes is not None:
             have_base = True
             base.classes.extend(self._classes)
 

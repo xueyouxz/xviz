@@ -93,7 +93,64 @@ class XVIZMetadataBuilder:
         return self
 
     def pose(self, position={}, orientation={}):
-        raise NotImplementedError() # TODO: implement transformation
+        """
+        Set pose transformation for the stream using position and orientation.
+        Similar to JavaScript version implementation.
+
+        Args:
+            position: dict with keys 'x', 'y', 'z' (default: 0)
+            orientation: dict with keys 'roll', 'pitch', 'yaw' (default: 0, in radians)
+        """
+        # Extract position values with defaults
+        x = position[0]
+        y = position[1]
+        z = position[2]
+
+        # Extract orientation values with defaults (in radians)
+        roll = orientation[0]
+        pitch = orientation[1]
+        yaw = orientation[2]
+
+        # Create rotation matrices for roll, pitch, yaw
+        cos_r, sin_r = np.cos(roll), np.sin(roll)
+        cos_p, sin_p = np.cos(pitch), np.sin(pitch)
+        cos_y, sin_y = np.cos(yaw), np.sin(yaw)
+
+        # Roll rotation matrix (around X-axis)
+        R_x = np.array([
+            [1, 0, 0],
+            [0, cos_r, -sin_r],
+            [0, sin_r, cos_r]
+        ])
+
+        # Pitch rotation matrix (around Y-axis)
+        R_y = np.array([
+            [cos_p, 0, sin_p],
+            [0, 1, 0],
+            [-sin_p, 0, cos_p]
+        ])
+
+        # Yaw rotation matrix (around Z-axis)
+        R_z = np.array([
+            [cos_y, -sin_y, 0],
+            [sin_y, cos_y, 0],
+            [0, 0, 1]
+        ])
+
+        # Combined rotation matrix: R = R_z * R_y * R_x
+        rotation_matrix = R_z @ R_y @ R_x
+
+        # Create 4x4 transformation matrix
+        transform_matrix = np.eye(4)
+        transform_matrix[:3, :3] = rotation_matrix
+        transform_matrix[:3, 3] = [x, y, z]
+
+        # Store as flattened array similar to transform_matrix method
+        matrix = transform_matrix.ravel()
+        del self._temp_stream.transform[:]
+        self._temp_stream.transform.extend(matrix.tolist())
+
+        return self
 
     def stream_style(self, style):
         self._temp_stream.stream_style.MergeFrom(build_stream_style(style))
